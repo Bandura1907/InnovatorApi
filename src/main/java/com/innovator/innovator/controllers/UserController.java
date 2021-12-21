@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.nio.file.Files;
 import java.util.Map;
 
@@ -45,6 +44,7 @@ public class UserController {
         headers.setContentLength(image.length);
         return new ResponseEntity<>(image, headers, HttpStatus.OK);
     }
+
 
     @PostMapping("/social_auth")
     public ResponseEntity<Map<String, Object>> socialAuth(@RequestBody User userBody) {
@@ -114,7 +114,7 @@ public class UserController {
 //        avatar.transferTo(new File(absolutePath + "\\" + nameFile));
         avatar.transferTo(new File(absolutePath + "/" + nameFile));
 
-        user.setPhotoUrl("http://" + InetAddress.getLoopbackAddress().getHostAddress() + ":" + serverProperties.getPort() +
+        user.setPhotoUrl("http://65.108.182.146" + ":" + serverProperties.getPort() +
                 "/api/photo/" + nameFile);
 
         userService.saveUser(user);
