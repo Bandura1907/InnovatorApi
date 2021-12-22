@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -29,22 +30,58 @@ public class UserController {
     private ServerProperties serverProperties;
 
     private UserService userService;
-    private ReportErrorService reportErrorService;
-    private RecommendationService recommendationService;
 
     @GetMapping("/photo/{name}")
     @ResponseBody
     public ResponseEntity<byte[]> getPhoto(@PathVariable String name) throws IOException {
-//        File imgPath = new File("src/main/resources/static/upload/" + name);
-        File imgPath = new File("/root/uploadFiles/" + name);
-
-        byte[] image = Files.readAllBytes(imgPath.toPath());
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_JPEG);
-        headers.setContentLength(image.length);
-        return new ResponseEntity<>(image, headers, HttpStatus.OK);
+//        return getMedia("src/main/resources/static/upload/" + name);
+        return getMedia("/root/uploadFiles/" + name);
     }
 
+//    @GetMapping("/getDefaultPhoto")
+//    @ResponseBody
+//    public ResponseEntity<byte[]> getDefaultPhoto () throws IOException {
+//        return getMedia("");
+//    }
+
+    @GetMapping("/all_users")
+    public ResponseEntity<List<User>> allUsers() {
+        return ResponseEntity.ok(userService.findAll());
+    }
+
+    @GetMapping("/user_by_id/{clientId}")
+    public ResponseEntity<User> userById(@PathVariable int clientId) {
+        return ResponseEntity.ok(userService.findById(clientId));
+    }
+
+    @PostMapping("/add_user")
+    public ResponseEntity<User> addUser(@RequestBody User user) {
+
+        if (user.getPhotoUrl() == null)
+            user.setPhotoUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlf91yfOT2B7vCu4ikHj54dlXtsCAo7ZzeCw&usqp=CAU");
+
+        return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/update_user/{clientId}")
+    public ResponseEntity<User> updateUser(@PathVariable int clientId, @RequestBody User userBody) {
+        User user = userService.findById(clientId);
+        user.setEmail(userBody.getEmail());
+        user.setFullName(userBody.getFullName());
+
+        if (userBody.getPhotoUrl() == null)
+            user.setPhotoUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlf91yfOT2B7vCu4ikHj54dlXtsCAo7ZzeCw&usqp=CAU");
+        else
+            user.setPhotoUrl(userBody.getPhotoUrl());
+
+        return ResponseEntity.ok(userService.saveUser(user));
+    }
+
+    @DeleteMapping("/delete_user/{clientId}")
+    public ResponseEntity<String> deleteUser(@PathVariable int clientId) {
+        userService.deleteUserById(clientId);
+        return ResponseEntity.ok("Delete user " + clientId);
+    }
 
     @PostMapping("/social_auth")
     public ResponseEntity<Map<String, Object>> socialAuth(@RequestBody User userBody) {
@@ -52,7 +89,8 @@ public class UserController {
             User item = new User();
 
             item.setEmail(userBody.getEmail());
-            item.setPhotoUrl(userBody.getPhotoUrl());
+            item.setPhotoUrl(userBody.getPhotoUrl() == null ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlf91yfOT2B7vCu4ikHj54dlXtsCAo7ZzeCw&usqp=CAU" :
+                    userBody.getPhotoUrl());
             item.setFullName(userBody.getFullName());
 
             return userService.saveUser(item);
@@ -65,32 +103,6 @@ public class UserController {
                 HttpStatus.CREATED);
     }
 
-    @PostMapping("/report_error/{clientId}")
-    public ResponseEntity<Map<String, String>> reportError(@PathVariable int clientId, @RequestBody ReportError reportErrorBody) {
-        User user = userService.findById(clientId);
-        ReportError reportError = new ReportError();
-
-        reportError.setCustomEmail(reportErrorBody.getCustomEmail());
-        reportError.setUser(user);
-
-        reportErrorService.saveReport(reportError);
-
-        return ResponseEntity.ok(Map.of("message", "Message sended"));
-    }
-
-    @PostMapping("/send_recommendation/{clientId}")
-    public ResponseEntity<Map<String, String>> sendRecommendation(@PathVariable int clientId, @RequestBody Recommendation recommendationBody) {
-        User user = userService.findById(clientId);
-        Recommendation recommendation = new Recommendation();
-
-        recommendation.setMessageText(recommendationBody.getMessageText());
-        recommendation.setCustomEmail(recommendation.getCustomEmail());
-        recommendation.setUser(user);
-
-        recommendationService.saveRecommendation(recommendation);
-
-        return ResponseEntity.ok(Map.of("message", "Message sended"));
-    }
 
     @PostMapping("/set_profile_avatar/{clientId}")
     public ResponseEntity<Map<String, String>> setAvatar(@PathVariable int clientId, @RequestParam("avatar") MultipartFile avatar) throws IOException {
@@ -114,11 +126,24 @@ public class UserController {
 //        avatar.transferTo(new File(absolutePath + "\\" + nameFile));
         avatar.transferTo(new File(absolutePath + "/" + nameFile));
 
+//        user.setPhotoUrl("http://localhost" + ":" + serverProperties.getPort() +
+//                "/api/photo/" + nameFile);
+
         user.setPhotoUrl("http://65.108.182.146" + ":" + serverProperties.getPort() +
                 "/api/photo/" + nameFile);
 
         userService.saveUser(user);
 
         return ResponseEntity.ok(Map.of("message", "Avatar updated"));
+    }
+
+    private ResponseEntity<byte[]> getMedia(String path) throws IOException {
+        File imgPath = new File(path);
+
+        byte[] image = Files.readAllBytes(imgPath.toPath());
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+        headers.setContentLength(image.length);
+        return new ResponseEntity<>(image, headers, HttpStatus.OK);
     }
 }

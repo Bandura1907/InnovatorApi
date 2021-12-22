@@ -21,7 +21,10 @@ public class User {
     private Integer clientId;
 
     private String email;
+
+    @Column(length = 1000000)
     private String photoUrl;
+
     private String fullName;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
