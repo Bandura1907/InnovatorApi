@@ -7,6 +7,7 @@ import com.innovator.innovator.services.RecommendationService;
 import com.innovator.innovator.services.ReportErrorService;
 import com.innovator.innovator.services.UserService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @CrossOrigin
 @RequestMapping("/api")
+@Slf4j
 public class UserController {
 
     private ServerProperties serverProperties;
@@ -150,6 +152,8 @@ public class UserController {
             headers.setContentLength(image.length);
             return new ResponseEntity<>(image, headers, HttpStatus.OK);
         } catch (NoSuchFileException ex) {
+            log.error("error reading file: " + ex.getMessage());
+
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
