@@ -123,8 +123,8 @@ public class UserController {
         String nameFile = avatar.getOriginalFilename();
 
         String absolutePath = new File(uploadPath).getAbsolutePath();
-//        avatar.transferTo(new File(absolutePath + "\\" + nameFile));
-        avatar.transferTo(new File(absolutePath + "/" + nameFile));
+        avatar.transferTo(new File(absolutePath + "\\" + nameFile));
+//        avatar.transferTo(new File(absolutePath + "/" + nameFile));
 
 //        user.setPhotoUrl("http://localhost" + ":" + serverProperties.getPort() +
 //                "/api/photo/" + nameFile);
@@ -134,7 +134,8 @@ public class UserController {
 
         userService.saveUser(user);
 
-        return ResponseEntity.ok(Map.of("message", "Avatar updated"));
+        return ResponseEntity.ok(Map.of("message", "Avatar updated",
+                                        "photoUrl", user.getPhotoUrl()));
     }
 
     private ResponseEntity<byte[]> getMedia(String path) throws IOException {
