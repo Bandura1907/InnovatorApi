@@ -20,6 +20,7 @@ public class ReportError {
     private Integer id;
 
     private String customEmail;
+    private String messageText;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore

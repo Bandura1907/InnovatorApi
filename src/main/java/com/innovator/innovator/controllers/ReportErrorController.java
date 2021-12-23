@@ -26,6 +26,7 @@ public class ReportErrorController {
 
         reportError.setCustomEmail(reportErrorBody.getCustomEmail());
         reportError.setUser(user);
+        reportError.setMessageText(reportErrorBody.getMessageText());
 
         reportErrorService.saveReport(reportError);
 

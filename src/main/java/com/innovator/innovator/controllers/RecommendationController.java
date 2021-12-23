@@ -25,7 +25,8 @@ public class RecommendationController {
         Recommendation recommendation = new Recommendation();
 
         recommendation.setMessageText(recommendationBody.getMessageText());
-        recommendation.setCustomEmail(recommendation.getCustomEmail());
+        recommendation.setCustomEmail(recommendationBody.getCustomEmail());
+        recommendation.setEmail(recommendationBody.getEmail());
         recommendation.setUser(user);
 
         recommendationService.saveRecommendation(recommendation);

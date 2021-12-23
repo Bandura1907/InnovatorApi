@@ -21,6 +21,7 @@ public class Recommendation {
 
     private String messageText;
     private String customEmail;
+    private String email;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
