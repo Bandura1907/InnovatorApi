@@ -18,8 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
@@ -120,17 +122,17 @@ public class UserController {
             uploadDir.mkdir();
         }
 
-        String nameFile = avatar.getOriginalFilename();
+
+        String uuidFile = UUID.randomUUID().toString();
+        String nameFile = uuidFile + avatar.getOriginalFilename();
 
         String absolutePath = new File(uploadPath).getAbsolutePath();
-        avatar.transferTo(new File(absolutePath + "\\" + nameFile));
-//        avatar.transferTo(new File(absolutePath + "/" + nameFile));
+//        avatar.transferTo(new File(absolutePath + "\\" + nameFile));
+        avatar.transferTo(new File(absolutePath + "/" + nameFile));
 
-//        user.setPhotoUrl("http://localhost" + ":" + serverProperties.getPort() +
-//                "/api/photo/" + nameFile);
+//        user.setPhotoUrl("http://localhost" + ":" + serverProperties.getPort() + "/api/photo/" + nameFile);
 
-        user.setPhotoUrl("http://65.108.182.146" + ":" + serverProperties.getPort() +
-                "/api/photo/" + nameFile);
+        user.setPhotoUrl("http://65.108.182.146" + ":" + serverProperties.getPort() + "/api/photo/" + nameFile);
 
         userService.saveUser(user);
 
@@ -139,12 +141,17 @@ public class UserController {
     }
 
     private ResponseEntity<byte[]> getMedia(String path) throws IOException {
-        File imgPath = new File(path);
+        try {
+            File imgPath = new File(path);
 
-        byte[] image = Files.readAllBytes(imgPath.toPath());
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_JPEG);
-        headers.setContentLength(image.length);
-        return new ResponseEntity<>(image, headers, HttpStatus.OK);
+            byte[] image = Files.readAllBytes(imgPath.toPath());
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG);
+            headers.setContentLength(image.length);
+            return new ResponseEntity<>(image, headers, HttpStatus.OK);
+        } catch (NoSuchFileException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
 }
