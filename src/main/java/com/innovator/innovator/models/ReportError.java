@@ -1,12 +1,13 @@
 package com.innovator.innovator.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -21,8 +22,16 @@ public class ReportError {
 
     private String customEmail;
     private String messageText;
+    private String status;
+
+    private LocalDateTime createDate = LocalDateTime.now();
+    private LocalDateTime closedDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JsonIgnore
+    @JsonIgnoreProperties(value = {
+            "reportErrorList",
+            "recommendationList",
+            "recommendationNewsList"
+    })
     private User user;
 }

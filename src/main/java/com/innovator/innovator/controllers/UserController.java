@@ -1,10 +1,6 @@
 package com.innovator.innovator.controllers;
 
-import com.innovator.innovator.models.Recommendation;
-import com.innovator.innovator.models.ReportError;
 import com.innovator.innovator.models.User;
-import com.innovator.innovator.services.RecommendationService;
-import com.innovator.innovator.services.ReportErrorService;
 import com.innovator.innovator.services.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +28,6 @@ import java.util.UUID;
 public class UserController {
 
     private ServerProperties serverProperties;
-
     private UserService userService;
 
     @GetMapping("/photo/{name}")
@@ -129,11 +124,10 @@ public class UserController {
         String nameFile = uuidFile + avatar.getOriginalFilename();
 
         String absolutePath = new File(uploadPath).getAbsolutePath();
-//        avatar.transferTo(new File(absolutePath + "\\" + nameFile));
-        avatar.transferTo(new File(absolutePath + "/" + nameFile));
+        avatar.transferTo(new File(absolutePath + "\\" + nameFile));
+//        avatar.transferTo(new File(absolutePath + "/" + nameFile));
 
 //        user.setPhotoUrl("http://localhost" + ":" + serverProperties.getPort() + "/api/photo/" + nameFile);
-
         user.setPhotoUrl("http://65.108.182.146" + ":" + serverProperties.getPort() + "/api/photo/" + nameFile);
 
         userService.saveUser(user);
@@ -153,7 +147,6 @@ public class UserController {
             return new ResponseEntity<>(image, headers, HttpStatus.OK);
         } catch (NoSuchFileException ex) {
             log.error("error reading file: " + ex.getMessage());
-
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 

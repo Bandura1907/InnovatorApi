@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -19,6 +21,13 @@ public class ReportErrorController {
     private UserService userService;
     private ReportErrorService reportErrorService;
 
+    @GetMapping("/all_reports")
+    public ResponseEntity<List<ReportError>> allReports() {
+        return ResponseEntity.ok(reportErrorService.findAll());
+    }
+
+
+
     @PostMapping("/report_error/{clientId}")
     public ResponseEntity<Map<String, String>> reportError(@PathVariable int clientId, @RequestBody ReportError reportErrorBody) {
         User user = userService.findById(clientId);
@@ -27,6 +36,7 @@ public class ReportErrorController {
         reportError.setCustomEmail(reportErrorBody.getCustomEmail());
         reportError.setUser(user);
         reportError.setMessageText(reportErrorBody.getMessageText());
+        reportError.setStatus(reportErrorBody.getStatus());
 
         reportErrorService.saveReport(reportError);
 
