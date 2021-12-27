@@ -20,4 +20,8 @@ public class ReportErrorService {
     public void saveReport(ReportError reportError) {
         reportErrorRepository.save(reportError);
     }
+
+    public void deleteReportById(int id) {
+        reportErrorRepository.deleteById(id);
+    }
 }

@@ -1,6 +1,5 @@
 package com.innovator.innovator.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,18 +12,22 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Recommendation {
+public class News {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 10000)
-    private String messageText;
-    private String customEmail;
-    private String email;
+    @Column(length = 1000000)
+    private String pictureUrl;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JsonIgnore
-    private User user;
+    @Column(length = 1000000)
+    private String videoUrl;
+
+    @Column(length = 1000000)
+    private String text;
+
+    @Column(length = 1000000)
+    private String sourceUrl;
+
 }

@@ -19,6 +19,7 @@ public class RecommendationNews {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(length = 10000)
     private String messageText;
     private String customEmail;
 

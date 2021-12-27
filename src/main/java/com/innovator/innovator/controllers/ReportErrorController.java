@@ -5,6 +5,7 @@ import com.innovator.innovator.models.User;
 import com.innovator.innovator.services.ReportErrorService;
 import com.innovator.innovator.services.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,13 +34,22 @@ public class ReportErrorController {
         User user = userService.findById(clientId);
         ReportError reportError = new ReportError();
 
+        if (user == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
         reportError.setCustomEmail(reportErrorBody.getCustomEmail());
         reportError.setUser(user);
         reportError.setMessageText(reportErrorBody.getMessageText());
-        reportError.setStatus(reportErrorBody.getStatus());
+        reportError.setStatus("Новый");
 
         reportErrorService.saveReport(reportError);
 
         return ResponseEntity.ok(Map.of("message", "Message sender"));
+    }
+
+    @DeleteMapping("/report_error_delete/{id}")
+    public ResponseEntity<Void> deleteReport(@PathVariable int id) {
+        reportErrorService.deleteReportById(id);
+        return ResponseEntity.ok().build();
     }
 }

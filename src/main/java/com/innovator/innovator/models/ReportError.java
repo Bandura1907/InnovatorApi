@@ -21,6 +21,8 @@ public class ReportError {
     private Integer id;
 
     private String customEmail;
+
+    @Column(length = 10000)
     private String messageText;
     private String status;
 

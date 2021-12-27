@@ -97,9 +97,10 @@ public class UserController {
 
         return new ResponseEntity<>(Map.of(
                 "clientId", user.getClientId(),
+                "fullName", user.getFullName(),
                 "photo", user.getPhotoUrl() == null ? "" : user.getPhotoUrl(),
                 "message", "Authentication succesfull"),
-                HttpStatus.CREATED);
+                HttpStatus.OK);
     }
 
 
