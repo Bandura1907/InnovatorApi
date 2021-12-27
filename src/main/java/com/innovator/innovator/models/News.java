@@ -24,7 +24,7 @@ public class News {
     @Column(length = 1000000)
     private String videoUrl;
 
-    @Column(length = 1000000)
+    @Column(length = 1000000000)
     private String text;
 
     @Column(length = 1000000)

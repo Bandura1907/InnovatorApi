@@ -17,6 +17,10 @@ public class NewsService {
         return newsRepository.findAll(pageable);
     }
 
+    public News findById(int id) {
+        return newsRepository.findById(id).get();
+    }
+
     public News saveNews(News news) {
         return newsRepository.save(news);
     }
