@@ -125,8 +125,8 @@ public class UserController {
         String nameFile = uuidFile + avatar.getOriginalFilename();
 
         String absolutePath = new File(uploadPath).getAbsolutePath();
-        avatar.transferTo(new File(absolutePath + "\\" + nameFile));
-//        avatar.transferTo(new File(absolutePath + "/" + nameFile));
+//        avatar.transferTo(new File(absolutePath + "\\" + nameFile));
+        avatar.transferTo(new File(absolutePath + "/" + nameFile));
 
 //        user.setPhotoUrl("http://localhost" + ":" + serverProperties.getPort() + "/api/photo/" + nameFile);
         user.setPhotoUrl("http://65.108.182.146" + ":" + serverProperties.getPort() + "/api/photo/" + nameFile);
