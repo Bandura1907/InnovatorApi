@@ -33,8 +33,8 @@ public class UserController {
     @GetMapping("/photo/{name}")
     @ResponseBody
     public ResponseEntity<byte[]> getPhoto(@PathVariable String name) throws IOException {
-//        return getMedia("src/main/resources/static/upload/" + name);
-        return getMedia("/root/uploadFiles/" + name);
+        return getMedia("src/main/resources/static/upload/" + name);
+//        return getMedia("/root/uploadFiles/" + name);
     }
 
 //    @GetMapping("/getDefaultPhoto")
@@ -112,8 +112,8 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
 
-//        String uploadPath = "src/main/resources/static/upload";
-        String uploadPath = "/root/uploadFiles";
+        String uploadPath = "src/main/resources/static/upload";
+//        String uploadPath = "/root/uploadFiles";
         File uploadDir = new File(uploadPath);
 
         if (!uploadDir.exists()) {
@@ -125,11 +125,11 @@ public class UserController {
         String nameFile = uuidFile + avatar.getOriginalFilename();
 
         String absolutePath = new File(uploadPath).getAbsolutePath();
-//        avatar.transferTo(new File(absolutePath + "\\" + nameFile));
-        avatar.transferTo(new File(absolutePath + "/" + nameFile));
+        avatar.transferTo(new File(absolutePath + "\\" + nameFile));
+//        avatar.transferTo(new File(absolutePath + "/" + nameFile));
 
-//        user.setPhotoUrl("http://localhost" + ":" + serverProperties.getPort() + "/api/photo/" + nameFile);
-        user.setPhotoUrl("http://65.108.182.146" + ":" + serverProperties.getPort() + "/api/photo/" + nameFile);
+        user.setPhotoUrl("http://localhost" + ":" + serverProperties.getPort() + "/api/photo/" + nameFile);
+//        user.setPhotoUrl("http://65.108.182.146" + ":" + serverProperties.getPort() + "/api/photo/" + nameFile);
 
         userService.saveUser(user);
 

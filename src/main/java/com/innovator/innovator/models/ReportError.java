@@ -26,6 +26,7 @@ public class ReportError {
     private String messageText;
     private String status;
 
+
     private LocalDateTime createDate = LocalDateTime.now();
     private LocalDateTime closedDate;
 

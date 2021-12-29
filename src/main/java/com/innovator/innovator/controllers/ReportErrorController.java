@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,11 @@ public class ReportErrorController {
         return ResponseEntity.ok(reportErrorService.findAll());
     }
 
-
+    @GetMapping("/report_by_id/{id}")
+    public ResponseEntity<ReportError> reportById(@PathVariable int id) {
+        ReportError reportError = reportErrorService.findById(id);
+        return reportError == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(reportError);
+    }
 
     @PostMapping("/report_error/{clientId}")
     public ResponseEntity<Map<String, String>> reportError(@PathVariable int clientId, @RequestBody ReportError reportErrorBody) {
@@ -45,6 +50,17 @@ public class ReportErrorController {
         reportErrorService.saveReport(reportError);
 
         return ResponseEntity.ok(Map.of("message", "Message sender"));
+    }
+
+    @PutMapping("/solve_the_problem/{id}")
+    public ResponseEntity<ReportError> solveTheProblem(@PathVariable int id) {
+        ReportError reportError = reportErrorService.findById(id);
+
+        reportError.setClosedDate(LocalDateTime.now());
+        reportError.setStatus("Решено");
+        reportErrorService.saveReport(reportError);
+
+        return ResponseEntity.ok(reportError);
     }
 
     @DeleteMapping("/report_error_delete/{id}")

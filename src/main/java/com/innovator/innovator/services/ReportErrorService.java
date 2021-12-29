@@ -17,6 +17,10 @@ public class ReportErrorService {
         return reportErrorRepository.findAll();
     }
 
+    public ReportError findById(int id) {
+        return reportErrorRepository.findById(id).get();
+    }
+
     public void saveReport(ReportError reportError) {
         reportErrorRepository.save(reportError);
     }
