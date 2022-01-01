@@ -5,10 +5,7 @@ import com.innovator.innovator.services.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -125,8 +122,8 @@ public class UserController {
         String nameFile = uuidFile + avatar.getOriginalFilename();
 
         String absolutePath = new File(uploadPath).getAbsolutePath();
-        avatar.transferTo(new File(absolutePath + "\\" + nameFile));
-//        avatar.transferTo(new File(absolutePath + "/" + nameFile));
+//        avatar.transferTo(new File(absolutePath + "\\" + nameFile));
+        avatar.transferTo(new File(absolutePath + "/" + nameFile));
 
         user.setPhotoUrl("http://localhost" + ":" + serverProperties.getPort() + "/api/photo/" + nameFile);
 //        user.setPhotoUrl("http://65.108.182.146" + ":" + serverProperties.getPort() + "/api/photo/" + nameFile);
