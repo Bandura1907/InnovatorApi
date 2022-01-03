@@ -65,8 +65,8 @@ public class ReportErrorController {
     }
 
     @DeleteMapping("/report_error_delete/{id}")
-    public ResponseEntity<Void> deleteReport(@PathVariable int id) {
+    public ResponseEntity<List<ReportError>> deleteReport(@PathVariable int id) {
         reportErrorService.deleteReportById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(reportErrorService.findAll());
     }
 }

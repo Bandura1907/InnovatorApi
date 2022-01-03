@@ -66,9 +66,16 @@ public class NewsController {
     }
 
     @DeleteMapping("/delete_news/{id}")
-    public ResponseEntity<?> deleteNews(@PathVariable int id) {
+    public ResponseEntity<Map<String, Object>> deleteNews(@PathVariable int id, @RequestParam(defaultValue = "0") int page) {
         newsService.deleteNewsById(id);
 
-        return ResponseEntity.ok().build();
+        Page<News> newsPage = newsService.findAllByPaging(PageRequest.of(page, 27));
+
+        return ResponseEntity.ok(Map.of(
+                "news", newsPage.getContent(),
+                "currentPage", newsPage.getNumber(),
+                "totalItems", newsPage.getTotalElements(),
+                "totalPages", newsPage.getTotalPages()
+        ));
     }
 }
