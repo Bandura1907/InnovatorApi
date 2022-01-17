@@ -5,21 +5,25 @@ import com.innovator.innovator.services.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
-@CrossOrigin
+//@CrossOrigin
 @RequestMapping("/api")
 @Slf4j
 public class UserController {
@@ -27,11 +31,19 @@ public class UserController {
     private ServerProperties serverProperties;
     private UserService userService;
 
+    @GetMapping("/getIp")
+    public List<String> getIp() throws UnknownHostException {
+        return Arrays.asList(
+                serverProperties.getPort().toString(),
+                InetAddress.getLocalHost().getHostAddress()
+        );
+    }
+
     @GetMapping("/photo/{name}")
     @ResponseBody
     public ResponseEntity<byte[]> getPhoto(@PathVariable String name) throws IOException {
-        return getMedia("src/main/resources/static/upload/" + name);
-//        return getMedia("/root/uploadFiles/" + name);
+//        return getMedia("src/main/resources/static/upload/" + name);
+        return getMedia("/root/uploadFiles/" + name);
     }
 
 //    @GetMapping("/getDefaultPhoto")
@@ -109,8 +121,8 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
 
-        String uploadPath = "src/main/resources/static/upload";
-//        String uploadPath = "/root/uploadFiles";
+//        String uploadPath = "src/main/resources/static/upload";
+        String uploadPath = "/root/uploadFiles";
         File uploadDir = new File(uploadPath);
 
         if (!uploadDir.exists()) {
@@ -125,8 +137,8 @@ public class UserController {
 //        avatar.transferTo(new File(absolutePath + "\\" + nameFile));
         avatar.transferTo(new File(absolutePath + "/" + nameFile));
 
-        user.setPhotoUrl("http://localhost" + ":" + serverProperties.getPort() + "/api/photo/" + nameFile);
-//        user.setPhotoUrl("http://65.108.182.146" + ":" + serverProperties.getPort() + "/api/photo/" + nameFile);
+//        user.setPhotoUrl("http://localhost" + ":" + serverProperties.getPort() + "/api/photo/" + nameFile);
+        user.setPhotoUrl("http://65.108.182.146" + ":" + serverProperties.getPort() + "/api/photo/" + nameFile);
 
         userService.saveUser(user);
 

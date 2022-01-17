@@ -3,20 +3,27 @@ package com.innovator.innovator.controllers;
 import com.innovator.innovator.models.News;
 import com.innovator.innovator.services.NewsService;
 import lombok.AllArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @AllArgsConstructor
-@CrossOrigin
 @RequestMapping("/api")
 public class NewsController {
 
@@ -49,9 +56,35 @@ public class NewsController {
         return ResponseEntity.ok(newsService.findById(id));
     }
 
+    @GetMapping("/news/photo/{name}")
+    public ResponseEntity<byte[]> getPhoto(@PathVariable String name) {
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/video/{name}")
+    public void getVideo(@PathVariable String name,HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.setAttribute(NewsService.ATTR_FILE,
+                new File("src/main/resources/static/video/" + name));
+        newsService.handleRequest(request, response);
+    }
+
+
     @PostMapping("/news_add")
     public ResponseEntity<News> addNews(@RequestBody News news) {
         return new ResponseEntity<>(newsService.saveNews(news), HttpStatus.CREATED);
+    }
+
+    @PostMapping(value = "/save_picture", consumes = {"multipart/form-data"})
+    public ResponseEntity<Void> savePicture(@RequestParam("picture") MultipartFile picture) throws FileUploadException {
+        newsService.savePicture(picture);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/save_video", consumes = {"multipart/form-data"})
+    public ResponseEntity<Void> saveVideo(@RequestParam("video") MultipartFile video) throws FileUploadException {
+        newsService.saveVideo(video);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/news_edit/{id}")
