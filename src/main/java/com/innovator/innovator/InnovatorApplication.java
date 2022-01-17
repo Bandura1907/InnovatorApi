@@ -45,7 +45,7 @@ public class InnovatorApplication {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**").allowedMethods("*")
-                        .allowedHeaders("*").allowCredentials(true)
+                        .allowedHeaders("*")
                         .allowedOrigins("*");
             }
         };
