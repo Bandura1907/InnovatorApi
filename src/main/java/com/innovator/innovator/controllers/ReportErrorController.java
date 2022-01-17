@@ -7,6 +7,7 @@ import com.innovator.innovator.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 @RestController
 @AllArgsConstructor
-@CrossOrigin
+//@CrossOrigin
 @RequestMapping("/api")
 public class ReportErrorController {
 
@@ -64,8 +65,8 @@ public class ReportErrorController {
     }
 
     @DeleteMapping("/report_error_delete/{id}")
-    public ResponseEntity<Void> deleteReport(@PathVariable int id) {
+    public ResponseEntity<List<ReportError>> deleteReport(@PathVariable int id) {
         reportErrorService.deleteReportById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(reportErrorService.findAll());
     }
 }
