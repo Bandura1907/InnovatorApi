@@ -71,8 +71,10 @@ public class NewsService extends ResourceHttpRequestHandler {
 
     public void saveVideo(MultipartFile file) throws FileUploadException {
         try {
+            String filename = file.getOriginalFilename().replaceAll(" ", "");
             Path root = Paths.get(uploadPathVideo);
-            Path resolve = root.resolve(Objects.requireNonNull(file.getOriginalFilename()));
+            Path resolve = root.resolve(filename);
+
             if (resolve.toFile().exists()) {
                 throw new FileUploadException("File already exists: " + file.getOriginalFilename());
             }

@@ -3,7 +3,12 @@ package com.innovator.innovator.controllers;
 import com.innovator.innovator.models.News;
 import com.innovator.innovator.services.NewsService;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,19 +20,31 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@AllArgsConstructor
 @RequestMapping("/api")
+@Slf4j
 public class NewsController {
 
-    private NewsService newsService;
+    @Value("${upload.path.photo}")
+    private String uploadPathPicture;
+
+    @Value("${upload.path.video}")
+    private String uploadPathVideo;
+
+    private final NewsService newsService;
+
+    @Autowired
+    public NewsController(NewsService newsService) {
+        this.newsService = newsService;
+    }
 
     @GetMapping("/news")
     public ResponseEntity<List<News>> getNews(@RequestParam(defaultValue = "0") int page) {
@@ -57,16 +74,36 @@ public class NewsController {
     }
 
     @GetMapping("/news/photo/{name}")
-    public ResponseEntity<byte[]> getPhoto(@PathVariable String name) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<byte[]> getPhoto(@PathVariable String name) throws IOException {
+        try {
+            File image = new File(uploadPathPicture + name);
+            byte[] imageBytes = Files.readAllBytes(image.toPath());
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG);
+            headers.setContentLength(imageBytes.length);
+
+            return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
+        } catch (NoSuchFileException ex) {
+            log.error("error reading file: " + ex.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
 
-    @GetMapping("/video/{name}")
-    public void getVideo(@PathVariable String name,HttpServletRequest request, HttpServletResponse response)
+    @GetMapping(value = "/video/{name}")
+    public void getVideo(@PathVariable String name, HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setAttribute(NewsService.ATTR_FILE,
-                new File("src/main/resources/static/video/" + name));
+                new File(uploadPathVideo + name));
         newsService.handleRequest(request, response);
+
+//        InputStream is = new FileInputStream(uploadPathVideo + name);
+//        byte[] videoResource = IOUtils.toByteArray(is);
+//
+//        return ResponseEntity.ok()
+//                .contentType(MediaType.parseMediaType("video/mp4"))
+//                .header(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=video_%s.%s", 1, "mp4"))
+//                .body(videoResource);
     }
 
 
