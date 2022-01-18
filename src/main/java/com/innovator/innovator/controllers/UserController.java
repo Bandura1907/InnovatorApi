@@ -31,13 +31,13 @@ public class UserController {
     private ServerProperties serverProperties;
     private UserService userService;
 
-    @GetMapping("/getIp")
-    public List<String> getIp() throws UnknownHostException {
-        return Arrays.asList(
-                serverProperties.getPort().toString(),
-                InetAddress.getLocalHost().getHostAddress()
-        );
-    }
+//    @GetMapping("/getIp")
+//    public List<String> getIp() throws UnknownHostException {
+//        return Arrays.asList(
+//                serverProperties.getPort().toString(),
+//                InetAddress.getLocalHost().getHostAddress()
+//        );
+//    }
 
     @GetMapping("/photo/{name}")
     @ResponseBody
@@ -45,12 +45,6 @@ public class UserController {
 //        return getMedia("src/main/resources/static/upload/" + name);
         return getMedia("/root/uploadFiles/" + name);
     }
-
-//    @GetMapping("/getDefaultPhoto")
-//    @ResponseBody
-//    public ResponseEntity<byte[]> getDefaultPhoto () throws IOException {
-//        return getMedia("");
-//    }
 
     @GetMapping("/all_users")
     public ResponseEntity<List<User>> allUsers() {
