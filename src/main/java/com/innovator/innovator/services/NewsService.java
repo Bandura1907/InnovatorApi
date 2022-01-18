@@ -3,6 +3,7 @@ package com.innovator.innovator.services;
 import com.innovator.innovator.models.News;
 import com.innovator.innovator.repository.NewsRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +23,7 @@ import java.nio.file.Paths;
 import java.util.Objects;
 
 @Service
+@Slf4j
 public class NewsService extends ResourceHttpRequestHandler {
 
     public static final String ATTR_FILE = NewsService.class.getName() + ".file";
@@ -60,9 +62,10 @@ public class NewsService extends ResourceHttpRequestHandler {
             Path root = Paths.get(uploadPathPicture);
             Path resolve = root.resolve(Objects.requireNonNull(file.getOriginalFilename()));
             if (resolve.toFile().exists()) {
-                throw new FileUploadException("File already exists: " + file.getOriginalFilename());
-            }
-            Files.copy(file.getInputStream(), resolve);
+                log.warn("File already exists: " + file.getOriginalFilename());
+//                throw new FileUploadException("File already exists: " + file.getOriginalFilename());
+            } else
+                Files.copy(file.getInputStream(), resolve);
 
         } catch (Exception e) {
             throw new FileUploadException("Could not store the file. Error: " + e.getMessage());
@@ -71,14 +74,15 @@ public class NewsService extends ResourceHttpRequestHandler {
 
     public void saveVideo(MultipartFile file) throws FileUploadException {
         try {
-            String filename = file.getOriginalFilename().replaceAll(" ", "");
+            String filename = file.getOriginalFilename();
             Path root = Paths.get(uploadPathVideo);
             Path resolve = root.resolve(filename);
 
             if (resolve.toFile().exists()) {
-                throw new FileUploadException("File already exists: " + file.getOriginalFilename());
-            }
-            Files.copy(file.getInputStream(), resolve);
+                log.warn("File already exists: " + file.getOriginalFilename());
+//                throw new FileUploadException("File already exists: " + file.getOriginalFilename());
+            } else
+                Files.copy(file.getInputStream(), resolve);
 
         } catch (Exception e) {
             throw new FileUploadException("Could not store the file. Error: " + e.getMessage());

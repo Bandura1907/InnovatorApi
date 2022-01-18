@@ -18,6 +18,9 @@ public class News {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    private String title;
+    private String subtitle;
+
     @Column(length = 1000000)
     private String pictureUrl;
 
