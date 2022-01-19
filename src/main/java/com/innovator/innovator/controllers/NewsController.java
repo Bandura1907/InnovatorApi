@@ -96,13 +96,6 @@ public class NewsController {
         request.setAttribute(NewsService.ATTR_FILE,
                 new File(uploadPathVideo + name));
         newsService.handleRequest(request, response);
-//        File video = new File(uploadPathVideo + name);
-//        byte[] videoBytes = Files.readAllBytes(video.toPath());
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-//        headers.setContentLength(videoBytes.length);
-//        return new ResponseEntity<>(videoBytes, headers, HttpStatus.OK);
-
     }
 
 
