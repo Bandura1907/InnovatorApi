@@ -61,9 +61,12 @@ public class NewsService extends ResourceHttpRequestHandler {
         try {
             Path root = Paths.get(uploadPathPicture);
             Path resolve = root.resolve(Objects.requireNonNull(file.getOriginalFilename()));
+
+            if (!root.toFile().exists())
+                root.toFile().mkdir();
+
             if (resolve.toFile().exists()) {
                 log.warn("File already exists: " + file.getOriginalFilename());
-//                throw new FileUploadException("File already exists: " + file.getOriginalFilename());
             } else
                 Files.copy(file.getInputStream(), resolve);
 
@@ -78,9 +81,11 @@ public class NewsService extends ResourceHttpRequestHandler {
             Path root = Paths.get(uploadPathVideo);
             Path resolve = root.resolve(filename);
 
+            if (!root.toFile().exists())
+                root.toFile().mkdir();
+
             if (resolve.toFile().exists()) {
                 log.warn("File already exists: " + file.getOriginalFilename());
-//                throw new FileUploadException("File already exists: " + file.getOriginalFilename());
             } else
                 Files.copy(file.getInputStream(), resolve);
 
