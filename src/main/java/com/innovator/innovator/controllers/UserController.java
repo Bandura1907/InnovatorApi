@@ -1,9 +1,14 @@
 package com.innovator.innovator.controllers;
 
+import com.innovator.innovator.MultipartUploadFile;
 import com.innovator.innovator.models.User;
 import com.innovator.innovator.services.UserService;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.core.env.Environment;
 import org.springframework.http.*;
@@ -16,34 +21,34 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@AllArgsConstructor
-//@CrossOrigin
 @RequestMapping("/api")
 @Slf4j
 public class UserController {
 
-    private ServerProperties serverProperties;
-    private UserService userService;
+    private final ServerProperties serverProperties;
+    private final UserService userService;
 
-//    @GetMapping("/getIp")
-//    public List<String> getIp() throws UnknownHostException {
-//        return Arrays.asList(
-//                serverProperties.getPort().toString(),
-//                InetAddress.getLocalHost().getHostAddress()
-//        );
-//    }
+    @Value("${upload.path.user.photo}")
+    private String pathPhoto;
+
+    @Autowired
+    public UserController(ServerProperties serverProperties, UserService userService) {
+        this.serverProperties = serverProperties;
+        this.userService = userService;
+    }
 
     @GetMapping("/photo/{name}")
     @ResponseBody
     public ResponseEntity<byte[]> getPhoto(@PathVariable String name) throws IOException {
-//        return getMedia("src/main/resources/static/upload/" + name);
-        return getMedia("/root/uploadFiles/" + name);
+        MultipartUploadFile image = new MultipartUploadFile(pathPhoto + name);
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image.getPhotoFile());
     }
 
     @GetMapping("/all_users")
@@ -80,9 +85,10 @@ public class UserController {
     }
 
     @DeleteMapping("/delete_user/{clientId}")
-    public ResponseEntity<String> deleteUser(@PathVariable int clientId) {
+    public ResponseEntity<Map<String, Object>> deleteUser(@PathVariable int clientId) {
         userService.deleteUserById(clientId);
-        return ResponseEntity.ok("Delete user " + clientId);
+        return ResponseEntity.ok(Map.of("status", "Delete user " + clientId,
+                "users", userService.findAll()));
     }
 
     @PostMapping("/social_auth")
@@ -107,52 +113,20 @@ public class UserController {
     }
 
 
-    @PostMapping("/set_profile_avatar/{clientId}")
+    @PostMapping(value = "/set_profile_avatar/{clientId}")
     public ResponseEntity<Map<String, String>> setAvatar(@PathVariable int clientId, @RequestParam("avatar") MultipartFile avatar) throws IOException {
         User user = userService.findById(clientId);
 
         if (avatar == null || user == null) {
             return ResponseEntity.notFound().build();
         }
-
-//        String uploadPath = "src/main/resources/static/upload";
-        String uploadPath = "/root/uploadFiles";
-        File uploadDir = new File(uploadPath);
-
-        if (!uploadDir.exists()) {
-            uploadDir.mkdir();
-        }
-
-
-        String uuidFile = UUID.randomUUID().toString();
-        String nameFile = uuidFile + avatar.getOriginalFilename();
-
-        String absolutePath = new File(uploadPath).getAbsolutePath();
-//        avatar.transferTo(new File(absolutePath + "\\" + nameFile));
-        avatar.transferTo(new File(absolutePath + "/" + nameFile));
-
-//        user.setPhotoUrl("http://localhost" + ":" + serverProperties.getPort() + "/api/photo/" + nameFile);
-        user.setPhotoUrl("http://65.108.182.146" + ":" + serverProperties.getPort() + "/api/photo/" + nameFile);
-
+        userService.saveUserPhoto(avatar);
+        user.setPhotoUrl("http://localhost" + ":" + serverProperties.getPort() + "/api/photo/" + avatar.getOriginalFilename());
+//        user.setPhotoUrl("http://65.108.182.146" + ":" + serverProperties.getPort() + "/api/photo/" + nameFile);
         userService.saveUser(user);
 
         return ResponseEntity.ok(Map.of("message", "Avatar updated",
                                         "photoUrl", user.getPhotoUrl()));
     }
 
-    private ResponseEntity<byte[]> getMedia(String path) throws IOException {
-        try {
-            File imgPath = new File(path);
-
-            byte[] image = Files.readAllBytes(imgPath.toPath());
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.IMAGE_JPEG);
-            headers.setContentLength(image.length);
-            return new ResponseEntity<>(image, headers, HttpStatus.OK);
-        } catch (NoSuchFileException ex) {
-            log.error("error reading file: " + ex.getMessage());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-    }
 }

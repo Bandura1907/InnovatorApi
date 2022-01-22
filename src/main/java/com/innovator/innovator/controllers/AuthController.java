@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
-//@CrossOrigin
 @RequestMapping("/api/auth")
 public class AuthController {
 

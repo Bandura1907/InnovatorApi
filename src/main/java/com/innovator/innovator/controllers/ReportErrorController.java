@@ -17,7 +17,6 @@ import java.util.Map;
 
 @RestController
 @AllArgsConstructor
-//@CrossOrigin
 @RequestMapping("/api")
 public class ReportErrorController {
 
