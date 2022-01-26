@@ -7,17 +7,14 @@ import com.innovator.innovator.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @AllArgsConstructor
-//@CrossOrigin
 @RequestMapping("/api")
 public class ReportErrorController {
 

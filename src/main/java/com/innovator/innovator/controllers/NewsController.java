@@ -1,5 +1,6 @@
 package com.innovator.innovator.controllers;
 
+import com.innovator.innovator.MultipartUploadFile;
 import com.innovator.innovator.models.News;
 import com.innovator.innovator.services.NewsService;
 import lombok.AllArgsConstructor;
@@ -76,25 +77,17 @@ public class NewsController {
     @GetMapping("/news/photo/{name}")
     public ResponseEntity<byte[]> getPhoto(@PathVariable String name) throws IOException {
         try {
-            File image = new File(uploadPathPicture + name);
-            byte[] imageBytes = Files.readAllBytes(image.toPath());
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.IMAGE_JPEG);
-            headers.setContentLength(imageBytes.length);
-
-            return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
-        } catch (NoSuchFileException ex) {
+            MultipartUploadFile image = new MultipartUploadFile(uploadPathPicture + name);
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image.getPhotoFile());
+        } catch (Exception ex) {
             log.error("error reading file: " + ex.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
     }
 
     @GetMapping(value = "/video/{name}")
-    public void getVideo(@PathVariable String name, HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.setAttribute(NewsService.ATTR_FILE,
-                new File(uploadPathVideo + name));
+    public void getVideo(@PathVariable String name, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setAttribute(NewsService.ATTR_FILE, new File(uploadPathVideo + name));
         newsService.handleRequest(request, response);
     }
 

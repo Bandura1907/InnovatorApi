@@ -1,5 +1,6 @@
 package com.innovator.innovator.services;
 
+import com.innovator.innovator.MultipartUploadFile;
 import com.innovator.innovator.models.News;
 import com.innovator.innovator.repository.NewsRepository;
 import lombok.AllArgsConstructor;
@@ -58,40 +59,12 @@ public class NewsService extends ResourceHttpRequestHandler {
     }
 
     public void savePicture(MultipartFile file) throws FileUploadException {
-        try {
-            Path root = Paths.get(uploadPathPicture);
-            Path resolve = root.resolve(Objects.requireNonNull(file.getOriginalFilename()));
+        new MultipartUploadFile(uploadPathPicture).saveFile(file);
 
-            if (!root.toFile().exists())
-                root.toFile().mkdir();
-
-            if (resolve.toFile().exists()) {
-                log.warn("File already exists: " + file.getOriginalFilename());
-            } else
-                Files.copy(file.getInputStream(), resolve);
-
-        } catch (Exception e) {
-            throw new FileUploadException("Could not store the file. Error: " + e.getMessage());
-        }
     }
 
     public void saveVideo(MultipartFile file) throws FileUploadException {
-        try {
-            String filename = file.getOriginalFilename();
-            Path root = Paths.get(uploadPathVideo);
-            Path resolve = root.resolve(filename);
-
-            if (!root.toFile().exists())
-                root.toFile().mkdir();
-
-            if (resolve.toFile().exists()) {
-                log.warn("File already exists: " + file.getOriginalFilename());
-            } else
-                Files.copy(file.getInputStream(), resolve);
-
-        } catch (Exception e) {
-            throw new FileUploadException("Could not store the file. Error: " + e.getMessage());
-        }
+        new MultipartUploadFile(uploadPathVideo).saveFile(file);
     }
 
     @Override

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class RecommendatonNewsService {
+public class RecommendationNewsService {
 
     private RecommendatonNewsRepository repository;
 
