@@ -3,29 +3,19 @@ package com.innovator.innovator.controllers;
 import com.innovator.innovator.MultipartUploadFile;
 import com.innovator.innovator.models.User;
 import com.innovator.innovator.services.UserService;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
-import org.springframework.core.env.Environment;
-import org.springframework.http.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
@@ -108,7 +98,7 @@ public class UserController {
                 "clientId", user.getClientId(),
                 "fullName", user.getFullName(),
                 "photo", user.getPhotoUrl() == null ? "" : user.getPhotoUrl(),
-                "message", "Authentication succesfull"),
+                "message", "Authentication successful"),
                 HttpStatus.OK);
     }
 
@@ -121,8 +111,8 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
         userService.saveUserPhoto(avatar);
-        user.setPhotoUrl("http://localhost" + ":" + serverProperties.getPort() + "/api/photo/" + avatar.getOriginalFilename());
-//        user.setPhotoUrl("http://65.108.182.146" + ":" + serverProperties.getPort() + "/api/photo/" + nameFile);
+//        user.setPhotoUrl("http://localhost" + ":" + serverProperties.getPort() + "/api/photo/" + avatar.getOriginalFilename());
+        user.setPhotoUrl("http://65.108.182.146" + ":" + serverProperties.getPort() + "/api/photo/" + avatar.getOriginalFilename());
         userService.saveUser(user);
 
         return ResponseEntity.ok(Map.of("message", "Avatar updated",

@@ -2,22 +2,20 @@ package com.innovator.innovator.controllers;
 
 import com.innovator.innovator.payload.request.LoginRequest;
 import com.innovator.innovator.payload.response.JwtResponse;
-import com.innovator.innovator.repository.RoleRepository;
-import com.innovator.innovator.repository.UserAuthRepository;
 import com.innovator.innovator.security.jwt.JwtUtils;
 import com.innovator.innovator.security.services.UserDetailsImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 @RestController
 @AllArgsConstructor
@@ -37,7 +35,7 @@ public class AuthController {
         String jwt = jwtUtils.generateJwtToken(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        String roles = String.valueOf(userDetails.getAuthorities().stream().collect(Collectors.toList()).get(0));
+        String roles = new ArrayList<>(userDetails.getAuthorities()).get(0).toString();
 
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
