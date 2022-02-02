@@ -1,5 +1,6 @@
 package com.innovator.innovator.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,4 +34,6 @@ public class News {
     @Column(length = 1000000)
     private String sourceUrl;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private UserAuth user;
 }

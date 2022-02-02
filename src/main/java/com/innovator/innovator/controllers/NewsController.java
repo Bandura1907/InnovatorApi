@@ -2,6 +2,9 @@ package com.innovator.innovator.controllers;
 
 import com.innovator.innovator.MultipartUploadFile;
 import com.innovator.innovator.models.News;
+import com.innovator.innovator.models.User;
+import com.innovator.innovator.models.UserAuth;
+import com.innovator.innovator.security.services.UserDetailsServiceImpl;
 import com.innovator.innovator.services.NewsService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -15,6 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,10 +46,12 @@ public class NewsController {
     private String uploadPathVideo;
 
     private final NewsService newsService;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    public NewsController(NewsService newsService) {
+    public NewsController(NewsService newsService, UserDetailsServiceImpl userDetailsService) {
         this.newsService = newsService;
+        this.userDetailsService = userDetailsService;
     }
 
     @GetMapping("/news")
@@ -78,7 +85,7 @@ public class NewsController {
     public ResponseEntity<byte[]> getPhoto(@PathVariable String name) throws IOException {
         try {
             MultipartUploadFile image = new MultipartUploadFile(uploadPathPicture + name);
-            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image.getPhotoFile());
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image.getPhotoFile().get());
         } catch (Exception ex) {
             log.error("error reading file: " + ex.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -94,6 +101,8 @@ public class NewsController {
 
     @PostMapping("/news_add")
     public ResponseEntity<News> addNews(@RequestBody News news) {
+        UserAuth userAuth = userDetailsService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+        news.setUser(userAuth);
         return new ResponseEntity<>(newsService.saveNews(news), HttpStatus.CREATED);
     }
 
