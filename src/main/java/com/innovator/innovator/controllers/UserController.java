@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/api")
@@ -36,9 +37,9 @@ public class UserController {
 
     @GetMapping("/photo/{name}")
     @ResponseBody
-    public ResponseEntity<byte[]> getPhoto(@PathVariable String name) throws IOException {
+    public ResponseEntity<byte[]> getPhoto(@PathVariable String name) throws IOException, ExecutionException, InterruptedException {
         MultipartUploadFile image = new MultipartUploadFile(pathPhoto + name);
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image.getPhotoFile());
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image.getPhotoFile().get());
     }
 
     @GetMapping("/all_users")
