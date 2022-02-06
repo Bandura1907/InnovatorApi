@@ -37,7 +37,7 @@ public class UserController {
 
     @GetMapping("/photo/{name}")
     @ResponseBody
-    public ResponseEntity<byte[]> getPhoto(@PathVariable String name) throws IOException, ExecutionException, InterruptedException {
+    public ResponseEntity<byte[]> getPhoto(@PathVariable String name) throws ExecutionException, InterruptedException {
         MultipartUploadFile image = new MultipartUploadFile(pathPhoto + name);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image.getPhotoFile().get());
     }
