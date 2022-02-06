@@ -8,6 +8,7 @@ services:
     restart: always
     ports:
       - "8080:8080"
-    network_mode: "host"
+    extra_hosts:
+      - "host.docker.internal"
     volumes:
       - "/root/uploadFiles:/root/uploadFiles/"
