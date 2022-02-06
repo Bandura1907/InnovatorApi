@@ -22,7 +22,7 @@ public class ReportError {
 
     private String customEmail;
 
-    @Column(length = 10000)
+    @Column(length = 10000000)
     private String messageText;
     private String status;
 
