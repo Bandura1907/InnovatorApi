@@ -34,6 +34,8 @@ public class News {
     @Column(length = 1000000)
     private String sourceUrl;
 
+    private Long datePublished = System.currentTimeMillis();
+
     @ManyToOne(fetch = FetchType.EAGER)
     private UserAuth user;
 }

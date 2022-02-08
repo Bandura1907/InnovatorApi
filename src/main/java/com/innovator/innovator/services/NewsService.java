@@ -3,7 +3,6 @@ package com.innovator.innovator.services;
 import com.innovator.innovator.MultipartUploadFile;
 import com.innovator.innovator.models.News;
 import com.innovator.innovator.repository.NewsRepository;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +16,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Objects;
 
 @Service
 @Slf4j
+@Transactional
 public class NewsService extends ResourceHttpRequestHandler {
 
     public static final String ATTR_FILE = NewsService.class.getName() + ".file";

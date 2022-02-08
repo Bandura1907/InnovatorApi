@@ -9,11 +9,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.MediaTypeFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +50,7 @@ public class NewsController {
         this.newsService = newsService;
         this.userDetailsService = userDetailsService;
     }
+
 
     @GetMapping("/news")
     public ResponseEntity<List<News>> getNews(@RequestParam(defaultValue = "0") int page) {
@@ -88,10 +92,10 @@ public class NewsController {
 
     @GetMapping(value = "/video/{name}")
     public void getVideo(@PathVariable String name, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute(NewsService.ATTR_FILE, new File(uploadPathVideo + name));
+        File videoFile = new File(uploadPathVideo + name);
+        request.setAttribute(NewsService.ATTR_FILE, videoFile);
         newsService.handleRequest(request, response);
     }
-
 
     @PostMapping("/news_add")
     public ResponseEntity<News> addNews(@RequestBody News news) {
@@ -128,14 +132,7 @@ public class NewsController {
     @DeleteMapping("/delete_news/{id}")
     public ResponseEntity<Map<String, Object>> deleteNews(@PathVariable int id, @RequestParam(defaultValue = "0") int page) {
         newsService.deleteNewsById(id);
-
         Page<News> newsPage = newsService.findAllByPaging(PageRequest.of(page, 27));
-
-        return ResponseEntity.ok(Map.of(
-                "news", newsPage.getContent(),
-                "currentPage", newsPage.getNumber(),
-                "totalItems", newsPage.getTotalElements(),
-                "totalPages", newsPage.getTotalPages()
-        ));
+        return ResponseEntity.ok(Map.of("totalPages", newsPage.getTotalPages()));
     }
 }
