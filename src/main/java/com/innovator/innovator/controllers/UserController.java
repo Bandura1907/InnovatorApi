@@ -76,10 +76,9 @@ public class UserController {
     }
 
     @DeleteMapping("/delete_user/{clientId}")
-    public ResponseEntity<Map<String, Object>> deleteUser(@PathVariable int clientId) {
+    public ResponseEntity<Void> deleteUser(@PathVariable int clientId) {
         userService.deleteUserById(clientId);
-        return ResponseEntity.ok(Map.of("status", "Delete user " + clientId,
-                "users", userService.findAll()));
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/social_auth")
