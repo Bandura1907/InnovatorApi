@@ -58,4 +58,10 @@ public class UsefulController {
 
         return ResponseEntity.ok(usefulRepository.save(usefulOptional.get()));
     }
+
+    @DeleteMapping("/useful/{id}")
+    public ResponseEntity<Void> deleteUseful(@PathVariable Integer id) {
+        usefulRepository.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
 }
