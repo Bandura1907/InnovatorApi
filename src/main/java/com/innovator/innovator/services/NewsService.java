@@ -69,45 +69,7 @@ public class NewsService extends ResourceHttpRequestHandler {
     public void saveVideo(MultipartFile file) throws FileUploadException {
         new MultipartUploadFile(uploadPathVideo).saveFile(file);
     }
-
-    public Optional<StreamBytesInfo> getStreamBytesInfo(Integer id, HttpRange range) {
-        Optional<News> byId = newsRepository.findById(id);
-        if (byId.isEmpty())
-            return Optional.empty();
-
-        Path filePath = Path.of(uploadPathVideo, byId.get().getVideoName());
-        if (!Files.exists(filePath))
-            return Optional.empty();
-
-        try {
-            long fileSize = Files.size(filePath);
-            long chunkSize = fileSize / 100;
-            if (range == null) {
-                return Optional.of(new StreamBytesInfo(
-                        out -> Files.newInputStream(filePath).transferTo(out), fileSize, 0, fileSize, "video/mp4"
-                ));
-            }
-
-            long rangeStart = range.getRangeStart(0);
-            long rangeEnd = rangeStart + chunkSize;
-            if (rangeEnd >= fileSize)
-                rangeEnd = fileSize - 1;
-
-            long finalRangeEnd = rangeEnd;
-            return Optional.of(new StreamBytesInfo(
-                    out -> {
-                        try(InputStream inputStream = Files.newInputStream(filePath)) {
-                            inputStream.skip(rangeStart);
-                            byte[] bytes = inputStream.readNBytes((int) ((finalRangeEnd - rangeStart) + 1));
-                            out.write(bytes);
-                        }
-                    }, fileSize, rangeStart, rangeEnd, "video/mp4"
-            ));
-
-        } catch (IOException e) {
-            return Optional.empty();
-        }
-    }
+    
 
     @Override
     protected Resource getResource(HttpServletRequest request) {
