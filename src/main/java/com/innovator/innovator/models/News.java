@@ -40,4 +40,5 @@ public class News {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private UserAuth user;
+
 }

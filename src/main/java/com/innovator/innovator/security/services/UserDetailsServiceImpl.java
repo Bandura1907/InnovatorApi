@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,5 +29,25 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public Optional<UserAuth> findByUsername(String username) {
         return userAuthRepository.findByUsername(username);
+    }
+
+    public Optional<UserAuth> findById(Integer id) {
+        return userAuthRepository.findById(id);
+    }
+
+    public boolean existsByUsername(String username) {
+        return userAuthRepository.existsByUsername(username);
+    }
+
+    public void save(UserAuth userAuth) {
+        userAuthRepository.save(userAuth);
+    }
+
+    public void deleteById(Integer id) {
+        userAuthRepository.deleteById(id);
+    }
+
+    public List<UserAuth> findAll() {
+        return userAuthRepository.findAll();
     }
 }

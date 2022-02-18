@@ -3,8 +3,10 @@ package com.innovator.innovator.controllers;
 import com.innovator.innovator.MultipartUploadFile;
 import com.innovator.innovator.models.News;
 import com.innovator.innovator.models.UserAuth;
+import com.innovator.innovator.models.VideoMetadata;
 import com.innovator.innovator.security.services.UserDetailsServiceImpl;
 import com.innovator.innovator.services.NewsService;
+import com.innovator.innovator.services.VideoService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +20,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,6 +92,12 @@ public class NewsController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+//    @GetMapping(value = "/news/photo/{name}", produces = MediaType.IMAGE_JPEG_VALUE)
+//    public ResponseEntity<StreamingResponseBody> getPicture(@PathVariable String name) throws IOException {
+//        InputStream inputStream = Files.newInputStream(Path.of(uploadPathPicture, name));
+//        return ResponseEntity.ok(inputStream::transferTo);
+//    }
 
 
     @GetMapping(value = "/video/{name}")
