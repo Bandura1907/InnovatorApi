@@ -1,14 +1,25 @@
 version: "3"
 
 services:
+  mysqldb:
+    image: mysql:5.7
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=innovator
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db:/var/lib/mysql
+
   innovator-api:
     build:
       dockerfile: Dockerfile
       context: .
     restart: always
+    depends_on:
+      - mysqldb
     ports:
       - "8080:8080"
-    extra_hosts:
-      - "host.docker.internal:172.17.0.1"
     volumes:
       - "/root/uploadFiles:/root/uploadFiles/"
