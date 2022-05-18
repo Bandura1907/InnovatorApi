@@ -6,14 +6,14 @@ services:
 #      - mysqldb
     build: ./
     restart: on-failure
-    extra_hosts:
-      - "host.docker.internal:172.17.0.1"
+#    extra_hosts:
+#      - "host.docker.internal:172.17.0.1"
     ports:
       - "8888:8888"
     volumes:
       - "/root/uploadFiles:/root/uploadFiles/"
-    stdin_open: true
-    tty: true
+#    stdin_open: true
+#    tty: true
 
 
 #  mysqldb:
