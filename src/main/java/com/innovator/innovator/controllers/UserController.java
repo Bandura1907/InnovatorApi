@@ -22,6 +22,8 @@ import java.util.concurrent.ExecutionException;
 @RequestMapping("/api")
 @Slf4j
 public class UserController {
+    private static final String DEFAULT_PHOTO = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlf91yfOT2B7vCu4ikHj54dlXtsCAo7ZzeCw&usqp=CAU";
+    private static final String IP_SERVER = "http://65.108.50.45";
 
     private final ServerProperties serverProperties;
     private final UserService userService;
@@ -56,7 +58,7 @@ public class UserController {
     public ResponseEntity<User> addUser(@RequestBody User user) {
 
         if (user.getPhotoUrl() == null)
-            user.setPhotoUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlf91yfOT2B7vCu4ikHj54dlXtsCAo7ZzeCw&usqp=CAU");
+            user.setPhotoUrl(DEFAULT_PHOTO);
 
         return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
     }
@@ -68,7 +70,7 @@ public class UserController {
         user.setFullName(userBody.getFullName());
 
         if (userBody.getPhotoUrl() == null)
-            user.setPhotoUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlf91yfOT2B7vCu4ikHj54dlXtsCAo7ZzeCw&usqp=CAU");
+            user.setPhotoUrl(DEFAULT_PHOTO);
         else
             user.setPhotoUrl(userBody.getPhotoUrl());
 
@@ -87,7 +89,7 @@ public class UserController {
             User item = new User();
 
             item.setEmail(userBody.getEmail());
-            item.setPhotoUrl(userBody.getPhotoUrl() == null ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlf91yfOT2B7vCu4ikHj54dlXtsCAo7ZzeCw&usqp=CAU" :
+            item.setPhotoUrl(userBody.getPhotoUrl() == null ? DEFAULT_PHOTO :
                     userBody.getPhotoUrl());
             item.setFullName(userBody.getFullName());
 
@@ -112,7 +114,7 @@ public class UserController {
         }
         userService.saveUserPhoto(avatar);
 //        user.setPhotoUrl("http://localhost" + ":" + serverProperties.getPort() + "/api/photo/" + avatar.getOriginalFilename());
-        user.setPhotoUrl("http://65.108.182.146" + ":" + serverProperties.getPort() + "/api/photo/" + avatar.getOriginalFilename());
+        user.setPhotoUrl(IP_SERVER + ":" + serverProperties.getPort() + "/api/photo/" + avatar.getOriginalFilename());
         userService.saveUser(user);
 
         return ResponseEntity.ok(Map.of("message", "Avatar updated",
