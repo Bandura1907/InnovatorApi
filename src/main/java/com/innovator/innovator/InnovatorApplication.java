@@ -1,8 +1,7 @@
 package com.innovator.innovator;
 
-import com.innovator.innovator.models.ERole;
-import com.innovator.innovator.models.Role;
-import com.innovator.innovator.models.UserAuth;
+import com.innovator.innovator.models.*;
+import com.innovator.innovator.repository.ProductsRepository;
 import com.innovator.innovator.repository.RoleRepository;
 import com.innovator.innovator.repository.UserAuthRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -48,19 +47,31 @@ public class InnovatorApplication {
     }
 
     @Bean
-    CommandLineRunner init(UserAuthRepository userAuthRepository, RoleRepository roleRepository) {
+    CommandLineRunner init(UserAuthRepository userAuthRepository,
+                           RoleRepository roleRepository,
+                           ProductsRepository productsRepository) {
         return args -> {
-              if (!userAuthRepository.existsByUsername("innovator")) {
-                  Role role = new Role();
-                  role.setName(ERole.ROLE_ADMIN);
-                  roleRepository.save(role);
 
-                  UserAuth userAdmin = new UserAuth();
-                  userAdmin.setUsername("innovator");
-                  userAdmin.setPassword(new BCryptPasswordEncoder().encode("zsxadc1234"));
-                  userAdmin.setRoles(Collections.singleton(role));
-                  userAuthRepository.save(userAdmin);
-              }
+            if (!productsRepository.existsByType(EType.PHYSICAL))
+                productsRepository.save(new Products(EType.PHYSICAL));
+            if (!productsRepository.existsByType(EType.INTERNET))
+                productsRepository.save(new Products(EType.INTERNET));
+            if (!productsRepository.existsByType(EType.DIGITAL))
+                productsRepository.save(new Products(EType.DIGITAL));
+            if (!productsRepository.existsByType(EType.TECHNOLOGY))
+                productsRepository.save(new Products(EType.TECHNOLOGY));
+
+            if (!userAuthRepository.existsByUsername("innovator")) {
+                Role role = new Role();
+                role.setName(ERole.ROLE_ADMIN);
+                roleRepository.save(role);
+
+                UserAuth userAdmin = new UserAuth();
+                userAdmin.setUsername("innovator");
+                userAdmin.setPassword(new BCryptPasswordEncoder().encode("zsxadc1234"));
+                userAdmin.setRoles(Collections.singleton(role));
+                userAuthRepository.save(userAdmin);
+            }
 
             if (!userAuthRepository.existsByUsername("manager")) {
                 Role role = new Role();

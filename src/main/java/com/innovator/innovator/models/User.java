@@ -27,6 +27,8 @@ public class User {
 
     private String fullName;
 
+    private Double donate;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<ReportError> reportErrorList;
 

@@ -2,6 +2,8 @@ package com.innovator.innovator.controllers;
 
 import com.innovator.innovator.MultipartUploadFile;
 import com.innovator.innovator.models.User;
+import com.innovator.innovator.payload.request.DonateRequest;
+import com.innovator.innovator.payload.response.MessageResponse;
 import com.innovator.innovator.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,6 +106,13 @@ public class UserController {
                 HttpStatus.OK);
     }
 
+    @PostMapping("/add_donate/{id}")
+    public ResponseEntity<?> addDonate(@RequestBody DonateRequest donateRequest, @PathVariable int id) {
+        User user = userService.findById(id);
+        user.setDonate(donateRequest.getSum());
+        userService.saveUser(user);
+        return ResponseEntity.ok(new MessageResponse("Donate add to user (" + user.getDonate() + ")"));
+    }
 
     @PostMapping(value = "/set_profile_avatar/{clientId}")
     public ResponseEntity<Map<String, String>> setAvatar(@PathVariable int clientId, @RequestParam("avatar") MultipartFile avatar) throws IOException {
