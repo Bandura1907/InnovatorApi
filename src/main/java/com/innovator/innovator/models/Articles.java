@@ -1,5 +1,6 @@
 package com.innovator.innovator.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,28 +9,27 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Useful {
+@Getter
+@Setter
+public class Articles {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String title;
-
-    @Column(length = 1000000)
-    private String imageUrl;
+    private String name;
+    private String pictureUrl;
 
     @Column(length = 1000000)
     private String description;
 
-    private String category;
+    @JsonIgnore
+    @Lob
+    private byte[] picture;
 
-    private Long datePublished = System.currentTimeMillis();
+    @JsonIgnore
+    private String pictureName;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private UserAuth user;
 }

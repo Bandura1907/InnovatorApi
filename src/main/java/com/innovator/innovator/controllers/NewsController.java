@@ -83,7 +83,7 @@ public class NewsController {
     }
 
     @GetMapping("/news/photo/{name}")
-    public ResponseEntity<byte[]> getPhoto(@PathVariable String name) throws IOException {
+    public ResponseEntity<byte[]> getPhoto(@PathVariable String name) {
         try {
             MultipartUploadFile image = new MultipartUploadFile(uploadPathPicture + name);
             return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image.getPhotoFile().get());
