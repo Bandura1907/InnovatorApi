@@ -9,7 +9,7 @@ services:
     extra_hosts:
       - "host.docker.internal:172.17.0.1"
     ports:
-      - "8888:8888"
+      - "8080:8080"
     volumes:
       - "/root/uploadFiles:/root/uploadFiles/"
 #    stdin_open: true
