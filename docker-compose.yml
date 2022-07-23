@@ -1,31 +1,46 @@
-version: "3"
+version: "3.3"
 
 services:
+  db:
+    image: mysql:latest
+    container_name: mysql-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=zsxadc1234
+    ports:
+      - "3306:3306"
+    restart: always
+    volumes:
+      - ./db:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: my-php-myadmin
+    ports:
+      - "8082:80"
+    restart: always
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: zsxadc1234
+
   innovator-api:
-#    depends_on:
-#      - mysqldb
-    build: ./
-    restart: on-failure
-    extra_hosts:
-      - "host.docker.internal:172.17.0.1"
+    image: java-doc
+    container_name: innovator-api
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
+    restart: always
+    depends_on:
+      - db
     volumes:
       - "/root/uploadFiles:/root/uploadFiles/"
-#    stdin_open: true
-#    tty: true
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/innovator?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: zsxadc1234
 
-
-#  mysqldb:
-#    image: mysql:5.7
-#    restart: unless-stopped
-#    environment:
-#      - MYSQL_ROOT_PASSWORD=nE5kMc7JCGNqwDQM
-#      - MYSQL_DATABASE=innovator
-#    ports:
-#      - "3306:3306"
-#    volumes:
-#      - ./db:/var/lib/mysql
-#
 #volumes:
-#  db:
+#  -db:
