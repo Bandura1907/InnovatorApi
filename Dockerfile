@@ -1,4 +1,4 @@
-FROM maven:3.8-jdk-17 AS build
+FROM maven:3.8-jdk-11 AS build
 RUN mkdir -p workspace
 WORKDIR workspace
 COPY ./pom.xml /workspace
@@ -11,7 +11,7 @@ RUN mvn -f pom.xml clean install -DskipTests
 #ENTRYPOINT ["java","-jar","innovator-backend.jar"]
 
 
-FROM openjdk:17
+FROM openjdk:11
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} Innovator-0.0.1.jar
 EXPOSE 8080
