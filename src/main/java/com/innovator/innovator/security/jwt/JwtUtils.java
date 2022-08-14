@@ -1,7 +1,6 @@
 package com.innovator.innovator.security.jwt;
 
 
-import com.innovator.innovator.models.UserAuth;
 import com.innovator.innovator.security.services.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +21,7 @@ public class JwtUtils {
     private int jwtExpirationMs;
 
     public String generateJwtToken (Authentication authentication) {
-        UserAuth userPrincipal = (UserAuth) authentication.getPrincipal();
+        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
         return Jwts.builder()
                 .setSubject(userPrincipal.getUsername())
