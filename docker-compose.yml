@@ -25,7 +25,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: zsxadc1234
 
   innovator-api:
-    image: java-doc
+    image: innovator-api
     container_name: innovator-api
     build:
       context: .

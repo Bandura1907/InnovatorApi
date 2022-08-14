@@ -1,5 +1,6 @@
 package com.innovator.innovator.security.services;
 
+import com.innovator.innovator.models.User;
 import com.innovator.innovator.models.UserAuth;
 import com.innovator.innovator.repository.UserAuthRepository;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         UserAuth userAuth = userAuthRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
 
-        return UserDetailsImpl.build(userAuth);
+        return userAuth;
     }
 
     public Optional<UserAuth> findByUsername(String username) {
