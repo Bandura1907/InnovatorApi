@@ -7,6 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -40,18 +43,22 @@ public class NewsService extends ResourceHttpRequestHandler {
         this.newsRepository = newsRepository;
     }
 
+    @Cacheable("newsCache")
     public Page<News> findAllByPaging(Pageable pageable) {
         return newsRepository.findAll(pageable);
     }
 
+    @Cacheable(value = "newsCache", key = "#id")
     public Optional<News> findById(int id) {
         return newsRepository.findById(id);
     }
 
+    @CachePut(value = "newsCache", key = "#news.id")
     public News saveNews(News news) {
         return newsRepository.save(news);
     }
 
+    @CacheEvict(value = "newsCache", key = "#id")
     public void deleteNewsById(int id) {
         newsRepository.deleteById(id);
     }

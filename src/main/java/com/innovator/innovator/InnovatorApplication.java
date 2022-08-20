@@ -21,6 +21,7 @@ import java.util.Collections;
 
 @SpringBootApplication
 @EnableAsync
+@EnableCaching
 public class InnovatorApplication {
 
     public static void main(String[] args) {
