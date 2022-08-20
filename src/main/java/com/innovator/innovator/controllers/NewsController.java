@@ -15,6 +15,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api")
@@ -84,11 +86,12 @@ public class NewsController {
     }
 
     @GetMapping("/news/photo/{name}")
-    @Cacheable("images")
+//    @Cacheable("images")
     public ResponseEntity<byte[]> getPhoto(@PathVariable String name) {
         try {
             MultipartUploadFile image = new MultipartUploadFile(uploadPathPicture + name);
-            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image.getPhotoFile().get());
+            return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
+                    .contentType(MediaType.IMAGE_JPEG).body(image.getPhotoFile().get());
         } catch (Exception ex) {
             log.error("error reading file: " + ex.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
