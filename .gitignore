@@ -2,6 +2,8 @@ HELP.md
 target/
 db/
 root/
+.mvn
+.run
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

@@ -5,6 +5,7 @@ import com.innovator.innovator.models.Videos;
 import com.innovator.innovator.payload.response.MessageResponse;
 import com.innovator.innovator.services.UsefulService;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +53,7 @@ public class UsefulController {
     }
 
     @GetMapping("/useful/get_picture/{name}/{index}")
+    @Cacheable("images")
     public ResponseEntity<?> getPicture(@PathVariable String name, @PathVariable int index) {
         byte[] image = new byte[0];
         switch (index) {

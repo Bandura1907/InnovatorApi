@@ -71,7 +71,7 @@ public class VideoMetadataController {
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Integer> uploadVideo(NewVideoRepr newVideoRepr) {
 
-        VideoMetadata videoMetadata = null;
+        VideoMetadata videoMetadata;
         try {
              videoMetadata = videoService.saveNewVideo(newVideoRepr);
         } catch (Exception e) {

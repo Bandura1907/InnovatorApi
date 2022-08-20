@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -83,6 +84,7 @@ public class NewsController {
     }
 
     @GetMapping("/news/photo/{name}")
+    @Cacheable("images")
     public ResponseEntity<byte[]> getPhoto(@PathVariable String name) {
         try {
             MultipartUploadFile image = new MultipartUploadFile(uploadPathPicture + name);
