@@ -43,22 +43,19 @@ public class NewsService extends ResourceHttpRequestHandler {
         this.newsRepository = newsRepository;
     }
 
-    @Cacheable("newsCache")
     public Page<News> findAllByPaging(Pageable pageable) {
         return newsRepository.findAll(pageable);
     }
 
-    @Cacheable(value = "newsCache", key = "#id")
     public Optional<News> findById(int id) {
         return newsRepository.findById(id);
     }
 
-    @CachePut(value = "newsCache", key = "#news.id")
     public News saveNews(News news) {
         return newsRepository.save(news);
     }
 
-    @CacheEvict(value = "newsCache", key = "#id")
+
     public void deleteNewsById(int id) {
         newsRepository.deleteById(id);
     }
