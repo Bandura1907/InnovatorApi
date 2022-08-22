@@ -1,5 +1,6 @@
 package com.innovator.innovator.controllers;
 
+import com.innovator.innovator.HelpfullyService;
 import com.innovator.innovator.MultipartUploadFile;
 import com.innovator.innovator.models.User;
 import com.innovator.innovator.payload.request.DonateRequest;
@@ -27,17 +28,17 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class UserController {
     private static final String DEFAULT_PHOTO = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlf91yfOT2B7vCu4ikHj54dlXtsCAo7ZzeCw&usqp=CAU";
-    private static final String IP_SERVER = "http://65.108.214.168";
+//    private static final String IP_SERVER = "http://65.108.214.168";
 
-    private final ServerProperties serverProperties;
+//    private final ServerProperties serverProperties;
     private final UserService userService;
 
     @Value("${upload.path.user.photo}")
     private String pathPhoto;
 
     @Autowired
-    public UserController(ServerProperties serverProperties, UserService userService) {
-        this.serverProperties = serverProperties;
+    public UserController( UserService userService) {
+//        this.serverProperties = serverProperties;
         this.userService = userService;
     }
 
@@ -126,7 +127,7 @@ public class UserController {
         }
         userService.saveUserPhoto(avatar);
 //        user.setPhotoUrl("http://localhost" + ":" + serverProperties.getPort() + "/api/photo/" + avatar.getOriginalFilename());
-        user.setPhotoUrl(IP_SERVER + ":" + serverProperties.getPort() + "/api/photo/" + avatar.getOriginalFilename());
+        user.setPhotoUrl(HelpfullyService.getCurrentBaseUrl() + "/api/photo/" + avatar.getOriginalFilename());
         userService.saveUser(user);
 
         return ResponseEntity.ok(Map.of("message", "Avatar updated",
