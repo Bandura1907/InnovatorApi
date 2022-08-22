@@ -25,7 +25,7 @@ import java.util.concurrent.ExecutionException;
 @Slf4j
 public class UserController {
     private static final String DEFAULT_PHOTO = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlf91yfOT2B7vCu4ikHj54dlXtsCAo7ZzeCw&usqp=CAU";
-    private static final String IP_SERVER = "http://65.108.50.45";
+    private static final String IP_SERVER = "http://65.108.214.168";
 
     private final ServerProperties serverProperties;
     private final UserService userService;
