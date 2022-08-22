@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api")
@@ -43,7 +45,8 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<byte[]> getPhoto(@PathVariable String name) throws ExecutionException, InterruptedException {
         MultipartUploadFile image = new MultipartUploadFile(pathPhoto + name);
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image.getPhotoFile().get());
+        return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
+                .contentType(MediaType.IMAGE_JPEG).body(image.getPhotoFile().get());
     }
 
     @GetMapping("/all_users")
