@@ -25,7 +25,7 @@ import java.util.TimeZone;
 @EnableAsync
 public class InnovatorApplication {
 
-    static public ZoneId ZONE_DEFAULT = TimeZone.getTimeZone("Europe/Moscow").toZoneId();
+//    static public ZoneId ZONE_DEFAULT = TimeZone.getTimeZone("Europe/Moscow").toZoneId();
 
     public static void main(String[] args) {
         SpringApplication.run(InnovatorApplication.class, args);
