@@ -7,13 +7,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter @Setter
 public class ReportError {
 
     @Id
@@ -26,8 +24,8 @@ public class ReportError {
     private String messageText;
     private String status;
 
-    private LocalDateTime createDate = LocalDateTime.now();
-    private LocalDateTime closedDate;
+    private Instant createDate;
+    private Instant closedDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnoreProperties(value = {
@@ -36,4 +34,8 @@ public class ReportError {
             "recommendationNewsList"
     })
     private User user;
+
+    public ReportError() {
+        this.createDate = Instant.now();
+    }
 }

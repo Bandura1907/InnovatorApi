@@ -17,11 +17,15 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.MultipartConfigElement;
+import java.time.ZoneId;
 import java.util.Collections;
+import java.util.TimeZone;
 
 @SpringBootApplication
 @EnableAsync
 public class InnovatorApplication {
+
+    static public ZoneId ZONE_DEFAULT = TimeZone.getTimeZone("Europe/Moscow").toZoneId();
 
     public static void main(String[] args) {
         SpringApplication.run(InnovatorApplication.class, args);

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +72,7 @@ public class ReportErrorController {
     public ResponseEntity<ReportError> solveTheProblem(@PathVariable int id) {
         ReportError reportError = reportErrorService.findById(id);
 
-        reportError.setClosedDate(LocalDateTime.now());
+        reportError.setClosedDate(Instant.now());
         reportError.setStatus("Решено");
         reportErrorService.saveReport(reportError);
 
