@@ -1,5 +1,6 @@
 package com.innovator.innovator.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +16,15 @@ public class Products {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    private String name;
+
+    @Lob
+    @JsonIgnore
+    private byte[] photo;
+
+    @JsonIgnore
+    private String photoName;
 
     @Enumerated(EnumType.STRING)
     private EType type;

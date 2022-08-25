@@ -7,7 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class BlockResponse {
-
+    private int id;
     private String name;
     private String description;
 

@@ -5,7 +5,6 @@ import com.innovator.innovator.models.Videos;
 import com.innovator.innovator.payload.response.MessageResponse;
 import com.innovator.innovator.services.UsefulService;
 import lombok.AllArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -167,65 +166,4 @@ public class UsefulController {
         usefulService.deleteVideoById(id);
     }
 
-//    @GetMapping("/get_useful")
-//    public ResponseEntity<List<Useful>> getUseful() {
-//        return ResponseEntity.ok(usefulService.findAll());
-//    }
-//
-//    @GetMapping("/get_useful/{id}")
-//    public ResponseEntity<?> getUsefulId(@PathVariable int id) {
-//        Optional<Useful> useful = usefulService.findById(id);
-//
-//        if (useful.isEmpty())
-//            return new ResponseEntity<>(new MessageResponse("Useful not found"), HttpStatus.NOT_FOUND);
-//
-//        return ResponseEntity.ok(useful.get());
-//    }
-
-//    private UsefulRepository usefulRepository;
-//    private UserAuthRepository userAuthRepository;
-//
-//    @GetMapping("/useful")
-//    public ResponseEntity<List<Useful>> getUsefulAll() {
-//        return  ResponseEntity.ok(usefulRepository.findAll());
-//    }
-//
-//    @GetMapping("/useful/{id}")
-//    public ResponseEntity<Useful> getUseful(@PathVariable Integer id) {
-//        Optional<Useful> useful = usefulRepository.findById(id);
-//
-//        if (useful.isEmpty())
-//            return ResponseEntity.notFound().build();
-//
-//        return ResponseEntity.ok(useful.get());
-//    }
-//
-//    @PostMapping("/useful")
-//    public ResponseEntity<Useful> addUseful(@RequestBody Useful useful) {
-//        UserAuth userAuth = userAuthRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
-//        useful.setUser(userAuth);
-//        return ResponseEntity.ok(usefulRepository.save(useful));
-//    }
-//
-//    @PutMapping("/useful/{id}")
-//    public ResponseEntity<Useful> editUseful(@PathVariable Integer id, @RequestBody Useful useful) {
-//        Optional<Useful> usefulOptional = usefulRepository.findById(id);
-//
-//        if (usefulOptional.isEmpty())
-//            return ResponseEntity.notFound().build();
-//
-//        usefulOptional.get().setTitle(useful.getTitle());
-//        usefulOptional.get().setDescription(useful.getDescription());
-//        usefulOptional.get().setCategory(useful.getCategory());
-//        usefulOptional.get().setImageUrl(useful.getImageUrl());
-//
-//
-//        return ResponseEntity.ok(usefulRepository.save(usefulOptional.get()));
-//    }
-//
-//    @DeleteMapping("/useful/{id}")
-//    public ResponseEntity<Void> deleteUseful(@PathVariable Integer id) {
-//        usefulRepository.deleteById(id);
-//        return ResponseEntity.ok().build();
-//    }
 }

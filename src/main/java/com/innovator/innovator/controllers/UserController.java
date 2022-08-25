@@ -27,10 +27,8 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/api")
 @Slf4j
 public class UserController {
-    private static final String DEFAULT_PHOTO = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlf91yfOT2B7vCu4ikHj54dlXtsCAo7ZzeCw&usqp=CAU";
-//    private static final String IP_SERVER = "http://65.108.214.168";
-
-//    private final ServerProperties serverProperties;
+    private static final String DEFAULT_PHOTO =
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlf91yfOT2B7vCu4ikHj54dlXtsCAo7ZzeCw&usqp=CAU";
     private final UserService userService;
 
     @Value("${upload.path.user.photo}")
@@ -126,7 +124,6 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
         userService.saveUserPhoto(avatar);
-//        user.setPhotoUrl("http://localhost" + ":" + serverProperties.getPort() + "/api/photo/" + avatar.getOriginalFilename());
         user.setPhotoUrl(HelpfullyService.getCurrentBaseUrl() + "/api/photo/" + avatar.getOriginalFilename());
         userService.saveUser(user);
 

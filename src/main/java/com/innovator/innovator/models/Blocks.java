@@ -1,5 +1,6 @@
 package com.innovator.innovator.models;
 
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,5 +25,8 @@ public class Blocks {
     private String description;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIncludeProperties(value = {
+            "type"
+    })
     private Products products;
 }
