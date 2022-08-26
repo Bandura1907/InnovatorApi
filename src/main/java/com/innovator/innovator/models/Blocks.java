@@ -9,9 +9,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Getter
-@Setter
-@AllArgsConstructor
+@Getter @Setter
 @NoArgsConstructor
 public class Blocks {
 
@@ -29,4 +27,10 @@ public class Blocks {
             "type"
     })
     private Products products;
+
+    public Blocks(String name, String description, Products products) {
+        this.name = name;
+        this.description = description;
+        this.products = products;
+    }
 }

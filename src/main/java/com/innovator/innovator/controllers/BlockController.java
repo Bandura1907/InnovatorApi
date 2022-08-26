@@ -55,24 +55,56 @@ public class BlockController {
         return ResponseEntity.ok(blocks.get());
     }
 
-    @PutMapping("/add_block/{index}")
-    public ResponseEntity<?> addBlock(@PathVariable int index,
-                                      @RequestBody BlockRequest blockRequest) {
+    @PostMapping("/add_block/{index}")
+    public ResponseEntity<?> addBlock(@PathVariable int index, @RequestBody BlockRequest blockRequest) {
         Products products = getProductByIndex(index);
-        if (products == null) {
-            return new ResponseEntity<>(new MessageResponse("product not found"), HttpStatus.NOT_FOUND);
-        }
+        Blocks block = new Blocks(blockRequest.getName(), blockRequest.getDescription(), products);
 
-        blockRequest.getBlocks().forEach(x -> x.setProducts(products));
+        blockRepository.save(block);
 
-        List<Blocks> blocks = products.getBlocks();
-        blocks.addAll(blockRequest.getBlocks());
-        products.setBlocks(blocks);
-
-        productsRepository.save(products);
-
-        return ResponseEntity.ok(new MessageResponse("Blocks successfully add"));
+        return ResponseEntity.ok(new MessageResponse("Block add"));
     }
+
+    @PutMapping("/edit_block/{id}/{index}")
+    public ResponseEntity<?> editBlock(@PathVariable int id, @PathVariable int index,
+                                       @RequestBody BlockRequest blockRequest) {
+        Optional<Blocks> block = blockRepository.findById(id);
+        if (block.isEmpty())
+            return new ResponseEntity<>(new MessageResponse("Block not found"), HttpStatus.NOT_FOUND);
+
+        Products products = getProductByIndex(index);
+
+        block.get().setName(blockRequest.getName());
+        block.get().setDescription(blockRequest.getDescription());
+        block.get().setProducts(products);
+
+        return ResponseEntity.ok(blockRepository.save(block.get()));
+    }
+
+    @DeleteMapping("/delete_block/{id}")
+    public ResponseEntity<?> deleteBlock(@PathVariable int id) {
+        blockRepository.deleteById(id);
+        return ResponseEntity.ok(new MessageResponse("Block deleted"));
+    }
+
+//    @PutMapping("/add_block/{index}")
+//    public ResponseEntity<?> addBlock(@PathVariable int index,
+//                                      @RequestBody BlockRequest blockRequest) {
+//        Products products = getProductByIndex(index);
+//        if (products == null) {
+//            return new ResponseEntity<>(new MessageResponse("product not found"), HttpStatus.NOT_FOUND);
+//        }
+//
+//        blockRequest.getBlocks().forEach(x -> x.setProducts(products));
+//
+//        List<Blocks> blocks = products.getBlocks();
+//        blocks.addAll(blockRequest.getBlocks());
+//        products.setBlocks(blocks);
+//
+//        productsRepository.save(products);
+//
+//        return ResponseEntity.ok(new MessageResponse("Blocks successfully add"));
+//    }
 
     private Products getProductByIndex(int index) {
         switch (index) {

@@ -7,5 +7,8 @@ import java.util.List;
 
 @Data
 public class BlockRequest {
-    List<Blocks> blocks;
+//    List<Blocks> blocks;
+
+    private String name;
+    private String description;
 }
