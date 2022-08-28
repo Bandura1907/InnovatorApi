@@ -105,7 +105,7 @@ public class NewsController {
 //    }
 
 
-    @GetMapping(value = "/video/{name}")
+    @GetMapping(value = "/news/stream/{name}")
     public void getVideo(@PathVariable String name, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         File videoFile = new File(uploadPathVideo + name);
         request.setAttribute(NewsService.ATTR_FILE, videoFile);

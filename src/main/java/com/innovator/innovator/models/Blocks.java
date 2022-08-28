@@ -23,9 +23,7 @@ public class Blocks {
     private String description;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JsonIncludeProperties(value = {
-            "type"
-    })
+    @JsonIncludeProperties("type")
     private Products products;
 
     public Blocks(String name, String description, Products products) {
