@@ -1,11 +1,11 @@
-package com.innovator.innovator.controllers.repr;
+package com.innovator.innovator.payload.request;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class VideoMetadataRepr {
+public class VideoMetadataRequest {
     private Integer id;
     private String description;
     private String contentType;

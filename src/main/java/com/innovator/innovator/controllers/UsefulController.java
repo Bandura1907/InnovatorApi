@@ -1,8 +1,11 @@
 package com.innovator.innovator.controllers;
 
+import com.innovator.innovator.HelpfullyService;
+import com.innovator.innovator.models.Activity;
 import com.innovator.innovator.models.Articles;
 import com.innovator.innovator.models.Videos;
 import com.innovator.innovator.payload.response.MessageResponse;
+import com.innovator.innovator.repository.ActivityRepository;
 import com.innovator.innovator.services.UsefulService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.CacheControl;
@@ -26,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 public class UsefulController {
 
     private UsefulService usefulService;
+    private ActivityRepository activityRepository;
 
     @GetMapping("/get_useful")
     public ResponseEntity<?> getUseful() {
@@ -91,6 +95,8 @@ public class UsefulController {
         videos.setPictureUrl(pictureUrl + pictureName + "/1");
         videos.setVideoUrl(videoUrl);
 
+        activityRepository.save(new Activity(HelpfullyService.getUsername(), "+ Видео"));
+
         return ResponseEntity.ok(usefulService.saveVideo(videos));
     }
 
@@ -107,6 +113,8 @@ public class UsefulController {
         articles.setPictureUrl(pictureUrl + pictureName + "/0");
         articles.setPicture(picture.getBytes());
         articles.setPictureName(pictureName);
+
+        activityRepository.save(new Activity(HelpfullyService.getUsername(), "+ Статья"));
 
         return ResponseEntity.ok(usefulService.saveArticle(articles));
     }
@@ -130,7 +138,7 @@ public class UsefulController {
             articles.get().setPictureName(pictureUrl != null ? pictureName : articles.get().getPictureName());
         }
 
-
+        activityRepository.save(new Activity(HelpfullyService.getUsername(), "# Статья"));
         return ResponseEntity.ok(usefulService.saveArticle(articles.get()));
     }
 
@@ -153,17 +161,20 @@ public class UsefulController {
             videos.get().setPictureName(pictureUrl != null ? pictureName : videos.get().getPictureName());
         }
 
+        activityRepository.save(new Activity(HelpfullyService.getUsername(), "# Видео"));
         return ResponseEntity.ok(usefulService.saveVideo(videos.get()));
     }
 
     @DeleteMapping("/useful/delete_article/{id}")
     public void deleteArticleById(@PathVariable int id) {
         usefulService.deleteArticleById(id);
+        activityRepository.save(new Activity(HelpfullyService.getUsername(), "- Статья"));
     }
 
     @DeleteMapping("/useful/delete_video/{id}")
     public void deleteVideoById(@PathVariable int id) {
         usefulService.deleteVideoById(id);
+        activityRepository.save(new Activity(HelpfullyService.getUsername(), "- Видео"));
     }
 
 }

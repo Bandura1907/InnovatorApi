@@ -50,7 +50,6 @@ public class ReportErrorService {
         Context context = new Context();
         context.setVariable("text", text);
         context.setVariable("baseUrl", HelpfullyService.getCurrentBaseUrl());
-        System.out.println(HelpfullyService.getCurrentBaseUrl());
         return templateEngine.process("report-email", context);
     }
 

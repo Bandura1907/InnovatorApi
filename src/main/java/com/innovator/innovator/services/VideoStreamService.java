@@ -1,6 +1,6 @@
 package com.innovator.innovator.services;
 
-import com.innovator.innovator.controllers.repr.NewVideoRepr;
+import com.innovator.innovator.payload.request.NewVideoRequest;
 import com.innovator.innovator.models.VideoMetadata;
 import com.innovator.innovator.repository.VideoMetadataRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -36,20 +36,20 @@ public class VideoStreamService extends ResourceHttpRequestHandler {
         this.videoMetadataRepository = videoMetadataRepository;
     }
 
-    public VideoMetadata saveNewVideo(NewVideoRepr newVideoRepr) {
+    public VideoMetadata saveNewVideo(NewVideoRequest newVideoRequest) {
         VideoMetadata metadata = new VideoMetadata();
-        metadata.setFileName(newVideoRepr.getFile().getOriginalFilename());
-        metadata.setContentType(newVideoRepr.getFile().getContentType());
-        metadata.setFileSize(newVideoRepr.getFile().getSize());
+        metadata.setFileName(newVideoRequest.getFile().getOriginalFilename());
+        metadata.setContentType(newVideoRequest.getFile().getContentType());
+        metadata.setFileSize(newVideoRequest.getFile().getSize());
         VideoMetadata videoMetadataSaved = videoMetadataRepository.save(metadata);
 
         Path directory = Path.of(dataFolder);
         try {
 //            Files.createDirectory(directory);
-            Path file = Path.of(directory.toString(), newVideoRepr.getFile().getOriginalFilename());
+            Path file = Path.of(directory.toString(), newVideoRequest.getFile().getOriginalFilename());
             if (!file.toFile().exists())
                 try (OutputStream outputStream = Files.newOutputStream(file, StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
-                    newVideoRepr.getFile().getInputStream().transferTo(outputStream);
+                    newVideoRequest.getFile().getInputStream().transferTo(outputStream);
                 }
         } catch (IOException ex) {
             log.error("", ex);
