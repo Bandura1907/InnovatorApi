@@ -1,8 +1,11 @@
 package com.innovator.innovator.controllers;
 
+import com.innovator.innovator.HelpfullyService;
 import com.innovator.innovator.MultipartUploadFile;
+import com.innovator.innovator.models.Activity;
 import com.innovator.innovator.models.News;
 import com.innovator.innovator.models.UserAuth;
+import com.innovator.innovator.repository.ActivityRepository;
 import com.innovator.innovator.security.services.UserDetailsServiceImpl;
 import com.innovator.innovator.services.NewsService;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,11 +42,13 @@ public class NewsController {
 
     private final NewsService newsService;
     private final UserDetailsServiceImpl userDetailsService;
+    private final ActivityRepository activityRepository;
 
     @Autowired
-    public NewsController(NewsService newsService, UserDetailsServiceImpl userDetailsService) {
+    public NewsController(NewsService newsService, UserDetailsServiceImpl userDetailsService, ActivityRepository activityRepository) {
         this.newsService = newsService;
         this.userDetailsService = userDetailsService;
+        this.activityRepository = activityRepository;
     }
 
 
@@ -54,7 +60,7 @@ public class NewsController {
     @GetMapping("/news_for_front")
     public ResponseEntity<Map<String, Object>> getFront(@RequestParam(defaultValue = "0") int page) {
 
-        Pageable pageable = PageRequest.of(page, 27);
+        Pageable pageable = PageRequest.of(page, 27, Sort.by(Sort.Direction.DESC, "id"));
         Page<News> pageTuts = newsService.findAllByPaging(pageable);
 
         List<News> news = pageTuts.getContent();
@@ -105,6 +111,8 @@ public class NewsController {
     public ResponseEntity<News> addNews(@RequestBody News news) {
         UserAuth userAuth = userDetailsService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
         news.setUser(userAuth);
+
+        activityRepository.save(new Activity(userAuth.getUsername(), "+ Новость"));
         return new ResponseEntity<>(newsService.saveNews(news), HttpStatus.CREATED);
     }
 
@@ -131,6 +139,8 @@ public class NewsController {
         news.setSubtitle(newsBody.getSubtitle());
         news.setVideoName(newsBody.getVideoName());
 
+        activityRepository.save(new Activity(HelpfullyService.getUsername(), "# Новость"));
+
         return ResponseEntity.ok(newsService.saveNews(news));
     }
 
@@ -138,6 +148,8 @@ public class NewsController {
     public ResponseEntity<Map<String, Object>> deleteNews(@PathVariable int id, @RequestParam(defaultValue = "0") int page) {
         newsService.deleteNewsById(id);
         Page<News> newsPage = newsService.findAllByPaging(PageRequest.of(page, 27));
+
+        activityRepository.save(new Activity(HelpfullyService.getUsername(), "- Новость"));
         return ResponseEntity.ok(Map.of("totalPages", newsPage.getTotalPages()));
     }
 

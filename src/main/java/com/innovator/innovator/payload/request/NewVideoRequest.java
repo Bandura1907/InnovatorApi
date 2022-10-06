@@ -1,4 +1,4 @@
-package com.innovator.innovator.controllers.repr;
+package com.innovator.innovator.payload.request;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -6,8 +6,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @NoArgsConstructor
-public class NewVideoRepr {
-
-
+public class NewVideoRequest {
     private MultipartFile file;
 }

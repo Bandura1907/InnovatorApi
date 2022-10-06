@@ -1,16 +1,20 @@
 package com.innovator.innovator.controllers;
 
+import com.innovator.innovator.HelpfullyService;
+import com.innovator.innovator.models.Activity;
 import com.innovator.innovator.models.Blocks;
 import com.innovator.innovator.models.EType;
 import com.innovator.innovator.models.Products;
 import com.innovator.innovator.payload.request.BlockRequest;
 import com.innovator.innovator.payload.response.BlockResponse;
 import com.innovator.innovator.payload.response.MessageResponse;
+import com.innovator.innovator.repository.ActivityRepository;
 import com.innovator.innovator.repository.BlockRepository;
 import com.innovator.innovator.repository.ProductsRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -24,6 +28,9 @@ public class BlockController {
 
     private final BlockRepository blockRepository;
     private final ProductsRepository productsRepository;
+    private final ActivityRepository activityRepository;
+
+
 
     @GetMapping("/get_blocks/{index}")
     public ResponseEntity<?> getBlocks(@PathVariable int index) {
@@ -61,6 +68,8 @@ public class BlockController {
         Blocks block = new Blocks(blockRequest.getName(), blockRequest.getDescription(), products);
 
         blockRepository.save(block);
+        activityRepository.save(new Activity(HelpfullyService.getUsername(),
+                String.format("Пользователь %s добавил блок %s", HelpfullyService.getUsername(), blockRequest.getName())));
 
         return ResponseEntity.ok(new MessageResponse("Block add"));
     }

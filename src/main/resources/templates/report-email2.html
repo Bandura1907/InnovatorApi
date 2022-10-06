@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{|${baseUrl}/css/style2.css|}">
+</head>
+<body>
+<section class="mail-seccess section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 offset-lg-3 col-12">
+                <!-- Error Inner -->
+                <div class="success-inner">
+                    <h1>
+<!--                        <i class="fa fa-envelope"></i>-->
+                        <img th:src="@{|${baseUrl}/img/innovator.svg|}">
+                        <span>Your Mail Sent Successfully!</span>
+                    </h1>
+                    <p th:text="${text}"></p>
+                    <a href="#" class="btn btn-primary btn-lg">Go Home</a>
+                </div>
+                <!--/ End Error Inner -->
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

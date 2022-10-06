@@ -1,6 +1,6 @@
 package com.innovator.innovator.controllers;
 
-import com.innovator.innovator.controllers.repr.NewVideoRepr;
+import com.innovator.innovator.payload.request.NewVideoRequest;
 import com.innovator.innovator.models.VideoMetadata;
 import com.innovator.innovator.payload.response.MessageResponse;
 import com.innovator.innovator.repository.VideoMetadataRepository;
@@ -93,11 +93,11 @@ public class VideoMetadataController {
 //    }
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Integer> uploadVideo(NewVideoRepr newVideoRepr) {
+    public ResponseEntity<Integer> uploadVideo(NewVideoRequest newVideoRequest) {
 
         VideoMetadata videoMetadata;
         try {
-             videoMetadata = videoStreamService.saveNewVideo(newVideoRepr);
+             videoMetadata = videoStreamService.saveNewVideo(newVideoRequest);
         } catch (Exception e) {
             System.out.println(e.getMessage());
            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
